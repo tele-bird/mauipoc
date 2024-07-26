@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MonkeyFinder.App">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <!--Colors-->
+            <Color x:Key="PrimaryLight">#FFC107</Color>
+            <Color x:Key="PrimaryDisabled">LightGray</Color>
+            <Color x:Key="PrimaryDark">#FFA000</Color>
+            <Color x:Key="Accent">#00BCD4</Color>
+            <Color x:Key="BackgroundLight">#FAF9F8</Color>
+            <Color x:Key="BackgroundDark">Black</Color>
+            <Color x:Key="CardBackgroundLight">White</Color>
+            <Color x:Key="CardBackgroundDark">#1C1C1E</Color>
+            <Color x:Key="LabelTextLight">#1F1F1F</Color>
+            <Color x:Key="LabelTextDark">White</Color>
+
+            <!--Page styles-->
+            <Style TargetType="Page" ApplyToDerivedTypes="True">
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"/>
+            </Style>
+			<Style ApplyToDerivedTypes="True" TargetType="NavigationPage">
+				<Setter Property="BarBackgroundColor" Value="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}" />
+				<Setter Property="BarTextColor" Value="White" />
+			</Style>
+
+            <!--Label styles-->
+            <Style TargetType="Label" x:Key="BaseLabel">
+                <Setter Property="FontFamily" Value="OpenSansRegular" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LabelTextLight}, Dark={StaticResource LabelTextDark}}" />
+            </Style>
+            <Style x:Key="MicroLabel" BasedOn="{StaticResource BaseLabel}" TargetType="Label">
+                <Setter Property="FontSize" Value="10"/>
+            </Style>
+            <Style x:Key="SmallLabel" BasedOn="{StaticResource BaseLabel}" TargetType="Label">
+                <Setter Property="FontSize" Value="12"/>
+            </Style>
+            <Style x:Key="MediumLabel" BasedOn="{StaticResource BaseLabel}" TargetType="Label">
+                <Setter Property="FontSize" Value="16"/>
+            </Style>
+            <Style x:Key="LargeLabel" BasedOn="{StaticResource BaseLabel}" TargetType="Label">
+                <Setter Property="FontSize" Value="20"/>
+            </Style>
+
+            <!--Picker styles-->
+            <Style TargetType="Picker" x:Key="BasePicker">
+                <Setter Property="FontFamily" Value="OpenSansRegular"/>
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup Name="CommonStates">
+                            <VisualState Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor" Value="{StaticResource PrimaryDisabled}"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+            <Style x:Key="MicroPicker" BasedOn="{StaticResource BasePicker}" TargetType="Picker">
+                <Setter Property="FontSize" Value="10"/>
+            </Style>
+            <Style x:Key="SmallPicker" BasedOn="{StaticResource BasePicker}" TargetType="Picker">
+                <Setter Property="FontSize" Value="12"/>
+            </Style>
+            <Style x:Key="MediumPicker" BasedOn="{StaticResource BasePicker}" TargetType="Picker">
+                <Setter Property="FontSize" Value="16"/>
+            </Style>
+            <Style x:Key="LargePickerl" BasedOn="{StaticResource BasePicker}" TargetType="Picker">
+                <Setter Property="FontSize" Value="20"/>
+            </Style>
+
+            <!--RefreshView styles-->
+            <Style TargetType="RefreshView" ApplyToDerivedTypes="True">
+                <Setter Property="RefreshColor" Value="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}" />
+                <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"/>
+            </Style>
+
+            <!--Button styles-->
+            <Style x:Key="ButtonOutline" TargetType="Button">
+                <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"/>
+                <Setter Property="BorderWidth" Value="2"/>
+                <Setter Property="HeightRequest" Value="40"/>
+                <Setter Property="CornerRadius" Value="20"/>
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup Name="CommonStates">
+                            <VisualState Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+                                    <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="TextColor" Value="{StaticResource PrimaryDisabled}"/>
+                                    <Setter Property="BorderColor" Value="{StaticResource PrimaryDisabled}"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+            <!--Frame styles-->
+            <Style x:Key="CardView" TargetType="Frame">
+                <Setter Property="BorderColor" Value="#DDDDDD"/>
+                <Setter Property="HasShadow" Value="{OnPlatform iOS=false, MacCatalyst=false, Default=true}"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="CornerRadius" Value="10"/>
+                <Setter Property="IsClippedToBounds" Value="True"/>
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup Name="CommonStates">
+                            <VisualState Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CardBackgroundLight}, Dark={StaticResource CardBackgroundDark}}"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{StaticResource PrimaryDisabled}"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+            <!--BoxView styles-->
+            <Style TargetType="BoxView" ApplyToDerivedTypes="True">
+                <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+            </Style>
+
+            <!--ActivityIndicator styles-->
+            <Style TargetType="ActivityIndicator" ApplyToDerivedTypes="True">
+                <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

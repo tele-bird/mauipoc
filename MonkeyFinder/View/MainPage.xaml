@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:MonkeyFinder.Model"
+             xmlns:viewmodel="clr-namespace:MonkeyFinder.ViewModel"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="MonkeyFinder.View.MainPage"
+             x:DataType="viewmodel:MonkeysViewModel"
+             Title="{Binding Title}"
+             x:Name="ThisMainPage">
+    <ContentPage.Resources>
+        <toolkit:VariableMultiValueConverter x:Key="AllTrueConverter" ConditionType="All"/>
+        <toolkit:IntToBoolConverter x:Key="IntToBoolConverter"/>
+    </ContentPage.Resources>
+    <Grid Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+          ColumnDefinitions="*,*,*"
+          ColumnSpacing="5"
+          RowDefinitions="*,Auto"
+          RowSpacing="0">
+        <RefreshView Grid.ColumnSpan="3"
+                     Command="{Binding GetMonkeysCommand}"
+                     IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView ItemsSource="{Binding Monkeys}"
+                            EmptyView="No monkey business here"
+                            SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="{Binding SelectedItemsPerRow}"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.Header>
+                    <Grid ColumnDefinitions="2*,*"
+                          HorizontalOptions="CenterAndExpand"
+                          IsVisible="{Binding Monkeys.Count, Converter={StaticResource IntToBoolConverter}}">
+                        <Label Grid.Column="0"
+                               Style="{StaticResource MediumLabel}"
+                               Text="Items Per Row:"
+                               VerticalTextAlignment="Center"
+                               HorizontalOptions="EndAndExpand"/>
+                        <Picker Grid.Column="1"
+                                IsEnabled="{Binding IsNotBusy}"
+                                Style="{StaticResource MediumPicker}"
+                                ItemsSource="{Binding PossibleItemsPerRow}"
+                                SelectedItem="{Binding SelectedItemsPerRow}"
+                                HorizontalOptions="StartAndExpand"
+                                WidthRequest="30"
+                                HorizontalTextAlignment="Center"/>
+                    </Grid>
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Monkey">
+                        <Grid Padding="10">
+                            <Frame HeightRequest="125"
+                                   IsEnabled="{Binding IsNotBusy, Source={x:Reference ThisMainPage}}"
+                                   Style="{StaticResource CardView}">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BindingContext.GoToMonkeyDetailCommand, Source={x:Reference ThisMainPage}}"
+                                                          CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+                                <Grid Padding="0"
+                                      ColumnDefinitions="125,*">
+                                    <Image Aspect="AspectFill"
+                                           Source="{Binding Image}"
+                                           WidthRequest="125"
+                                           HeightRequest="125"/>
+                                    <StackLayout Grid.Column="1"
+                                                 Padding="10"
+                                                 VerticalOptions="Center">
+                                        <Label Style="{StaticResource LargeLabel}"
+                                               Text="{Binding Name}"/>
+                                        <Label Style="{StaticResource MediumLabel}"
+                                               Text="{Binding Location}"/>
+                                    </StackLayout>
+                                </Grid>
+                            </Frame>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+        <Button Text="Get Monkeys"
+                Command="{Binding GetMonkeysCommand}"
+                IsEnabled="{Binding IsNotBusy}"
+                Grid.Row="1"
+                Grid.Column="0"
+                Style="{StaticResource ButtonOutline}"
+                Margin="8"/>
+        <Button Text="Find Closest" 
+                Command="{Binding GetClosestMonkeyCommand}"
+                Grid.Row="1"
+                Grid.Column="1"
+                Style="{StaticResource ButtonOutline}"
+                Margin="8">
+            <Button.IsEnabled>
+                <MultiBinding Converter="{StaticResource AllTrueConverter}">
+                    <Binding Path="IsNotBusy"/>
+                    <Binding Path="Monkeys.Count"
+                             Converter="{StaticResource IntToBoolConverter}"
+                             FallbackValue="false"
+                             TargetNullValue="false"/>
+                </MultiBinding>
+            </Button.IsEnabled>
+        </Button>
+        <Button Text="Clear" 
+                Command="{Binding ClearMonkeysCommand}"
+                Grid.Row="1"
+                Grid.Column="2"
+                Style="{StaticResource ButtonOutline}"
+                Margin="8">
+            <Button.IsEnabled>
+                <MultiBinding Converter="{StaticResource AllTrueConverter}">
+                    <Binding Path="IsNotBusy"/>
+                    <Binding Path="Monkeys.Count"
+                             Converter="{StaticResource IntToBoolConverter}"
+                             FallbackValue="false"
+                             TargetNullValue="false"/>
+                </MultiBinding>
+            </Button.IsEnabled>
+        </Button>
+        <ActivityIndicator IsVisible="{Binding IsBusy}"
+                           IsRunning="{Binding IsBusy}"
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="CenterAndExpand"
+                           Grid.RowSpan="2"
+                           Grid.ColumnSpan="3"/>
+    </Grid>
+</ContentPage>
