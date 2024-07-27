@@ -50,7 +50,7 @@
                     <DataTemplate x:DataType="model:Monkey">
                         <Grid Padding="10">
                             <Frame HeightRequest="125"
-                                   IsEnabled="{Binding IsNotBusy, Source={x:Reference ThisMainPage}}"
+                                   IsEnabled="{Binding BindingContext.IsNotBusy, Source={x:Reference ThisMainPage}}"
                                    Style="{StaticResource CardView}">
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding BindingContext.GoToMonkeyDetailCommand, Source={x:Reference ThisMainPage}}"
