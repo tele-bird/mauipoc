@@ -27,7 +27,7 @@
                     <GridItemsLayout Orientation="Vertical"
                                      Span="{Binding SelectedItemsPerRow}"/>
                 </CollectionView.ItemsLayout>
-                <CollectionView.Header>
+                <!--<CollectionView.Header>
                     <Grid ColumnDefinitions="2*,*"
                           HorizontalOptions="CenterAndExpand"
                           IsVisible="{Binding Monkeys.Count, Converter={StaticResource IntToBoolConverter}}">
@@ -45,7 +45,7 @@
                                 WidthRequest="30"
                                 HorizontalTextAlignment="Center"/>
                     </Grid>
-                </CollectionView.Header>
+                </CollectionView.Header>-->
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:Monkey">
                         <Grid Padding="10">
