@@ -8,26 +8,31 @@ public partial class MonkeysViewModel : BaseViewModel
 {
     private readonly MonkeyService monkeyService;
     private readonly IGeolocation geolocation;
+    private readonly IUserPreferences userPreferences;
 
     public ObservableCollection<Monkey> Monkeys { get; } = new();
-    public ObservableCollection<int> PossibleItemsPerRow { get; } = new() { 1, 2, 3, 4, 5 };
+    //public ObservableCollection<int> PossibleItemsPerRow { get; } = new() { 1, 2, 3, 4, 5 };
 
     [ObservableProperty]
-    int selectedItemsPerRow;
+    int gridItemsLayoutSpan;
 
     [ObservableProperty]
     bool isRefreshing;
 
-    public MonkeysViewModel(MonkeyService monkeyService, IGeolocation geolocation)
+    public MonkeysViewModel(
+        MonkeyService monkeyService,
+        IGeolocation geolocation,
+        IUserPreferences userPreferences)
     {
         Title = "Monkey Finder";
         this.monkeyService = monkeyService;
         this.geolocation = geolocation;
-        SelectedItemsPerRow = PossibleItemsPerRow[0];
+        this.userPreferences = userPreferences;
+        GridItemsLayoutSpan = this.userPreferences.GridItemsLayoutSpan;
     }
 
     [RelayCommand]
-    async Task GetMonkeys()
+    async Task RefreshMonkeys()
     {
         if (IsBusy) return;
         try
@@ -99,7 +104,7 @@ public partial class MonkeysViewModel : BaseViewModel
         }
         catch (Exception exc)
         {
-            Debug.WriteLine($"Unable to get monkeys: {exc.Message}");
+            Debug.WriteLine($"Unable to clear monkeys: {exc.Message}");
             await Application.Current.MainPage.DisplayAlert("Error", exc.Message, "OK");
         }
         finally

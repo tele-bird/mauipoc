@@ -1,11 +1,11 @@
 namespace MonkeyFinder.View;
 
 [XamlCompilation(XamlCompilationOptions.Compile)]
-public partial class DetailsPage : ContentPage
+public partial class DetailsPage : BaseContentPage
 {
 	public DetailsPage(MonkeyDetailsViewModel monkeyDetailsViewModel)
+        : base(monkeyDetailsViewModel)
 	{
-		InitializeComponent();
-		BindingContext = monkeyDetailsViewModel;
-	}
+        InitializeComponent();
+    }
 }

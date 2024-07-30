@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<view:BaseContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:MonkeyFinder.Model"
+             xmlns:view="clr-namespace:MonkeyFinder.View"
              xmlns:viewmodel="clr-namespace:MonkeyFinder.ViewModel"
              x:Class="MonkeyFinder.View.DetailsPage"
              x:DataType="viewmodel:MonkeyDetailsViewModel"
@@ -42,4 +43,4 @@
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
-</ContentPage>
+</view:BaseContentPage>

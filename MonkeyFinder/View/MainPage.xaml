@@ -1,31 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<view:BaseContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:MonkeyFinder.Model"
+             xmlns:view="clr-namespace:MonkeyFinder.View"
              xmlns:viewmodel="clr-namespace:MonkeyFinder.ViewModel"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="MonkeyFinder.View.MainPage"
              x:DataType="viewmodel:MonkeysViewModel"
              Title="{Binding Title}"
              x:Name="ThisMainPage">
-    <ContentPage.Resources>
+    <view:BaseContentPage.Resources>
         <toolkit:VariableMultiValueConverter x:Key="AllTrueConverter" ConditionType="All"/>
         <toolkit:IntToBoolConverter x:Key="IntToBoolConverter"/>
-    </ContentPage.Resources>
+    </view:BaseContentPage.Resources>
     <Grid Background="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
           ColumnDefinitions="*,*,*"
           ColumnSpacing="5"
           RowDefinitions="*,Auto"
           RowSpacing="0">
         <RefreshView Grid.ColumnSpan="3"
-                     Command="{Binding GetMonkeysCommand}"
+                     Command="{Binding RefreshMonkeysCommand}"
                      IsRefreshing="{Binding IsRefreshing}">
             <CollectionView ItemsSource="{Binding Monkeys}"
                             EmptyView="No monkey business here"
                             SelectionMode="None">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical"
-                                     Span="{Binding SelectedItemsPerRow}"/>
+                                     Span="{Binding GridItemsLayoutSpan}"/>
                 </CollectionView.ItemsLayout>
                 <!--<CollectionView.Header>
                     <Grid ColumnDefinitions="2*,*"
@@ -77,8 +78,8 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </RefreshView>
-        <Button Text="Get Monkeys"
-                Command="{Binding GetMonkeysCommand}"
+        <Button Text="Refresh Monkeys"
+                Command="{Binding RefreshMonkeysCommand}"
                 IsEnabled="{Binding IsNotBusy}"
                 Grid.Row="1"
                 Grid.Column="0"
@@ -123,4 +124,4 @@
                            Grid.RowSpan="2"
                            Grid.ColumnSpan="3"/>
     </Grid>
-</ContentPage>
+</view:BaseContentPage>
