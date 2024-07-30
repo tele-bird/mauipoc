@@ -22,7 +22,7 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 		// platform-independent services
-        builder.Services.AddSingleton<MonkeyService>();
+        builder.Services.AddSingleton<IMonkeyService, MonkeyService>();
         builder.Services.AddSingleton<IGeolocation>(Geolocation.Default);
         builder.Services.AddSingleton<IMap>(Map.Default);
 		builder.Services.AddSingleton<IUserPreferences, UserPreferences>();

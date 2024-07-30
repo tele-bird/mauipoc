@@ -4,6 +4,8 @@ namespace MonkeyFinder.ViewModel;
 
 public abstract partial class BaseViewModel : ObservableObject
 {
+    private bool firstAppeared = false;
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotBusy))]
     bool isBusy;
@@ -17,6 +19,16 @@ public abstract partial class BaseViewModel : ObservableObject
     protected virtual async Task OnAppearing()
     {
         Trace.WriteLine($"{GetType().Name}.{nameof(OnAppearing)} >>");
+        if(!firstAppeared)
+        {
+            await OnFirstAppearing();
+            firstAppeared = true;
+        }
+    }
+
+    protected virtual async Task OnFirstAppearing()
+    {
+        Trace.WriteLine($"{GetType().Name}.{nameof(OnFirstAppearing)} >>");
     }
 
     [RelayCommand]

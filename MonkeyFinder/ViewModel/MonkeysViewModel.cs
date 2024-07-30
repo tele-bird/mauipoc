@@ -7,7 +7,7 @@ namespace MonkeyFinder.ViewModel;
 
 public partial class MonkeysViewModel : BaseViewModel
 {
-    private readonly MonkeyService monkeyService;
+    private readonly IMonkeyService monkeyService;
     private readonly IGeolocation geolocation;
     private readonly IUserPreferences userPreferences;
 
@@ -21,7 +21,7 @@ public partial class MonkeysViewModel : BaseViewModel
     bool isRefreshing;
 
     public MonkeysViewModel(
-        MonkeyService monkeyService,
+        IMonkeyService monkeyService,
         IGeolocation geolocation,
         IUserPreferences userPreferences)
     {
@@ -32,10 +32,10 @@ public partial class MonkeysViewModel : BaseViewModel
         GridItemsLayoutSpan = this.userPreferences.GridItemsLayoutSpan;
     }
 
-    protected override async Task OnAppearing()
+    protected override async Task OnFirstAppearing()
     {
         IsBusy = true;
-        await base.OnAppearing().ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext);
+        await base.OnFirstAppearing().ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext);
         RefreshMonkeys(CancellationToken.None).SafeFireAndForget(HandleFireAndForgetException);
     }
 
