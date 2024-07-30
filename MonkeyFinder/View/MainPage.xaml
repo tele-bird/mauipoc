@@ -41,7 +41,7 @@
                                 IsEnabled="{Binding IsNotBusy}"
                                 Style="{StaticResource MediumPicker}"
                                 ItemsSource="{Binding PossibleItemsPerRow}"
-                                SelectedItem="{Binding SelectedItemsPerRow}"
+                                SelectedItem="{Binding GridItemsLayoutSpan}"
                                 HorizontalOptions="StartAndExpand"
                                 WidthRequest="30"
                                 HorizontalTextAlignment="Center"/>

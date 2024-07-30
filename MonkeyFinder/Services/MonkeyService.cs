@@ -4,7 +4,6 @@ namespace MonkeyFinder.Services;
 
 public class MonkeyService
 {
-    List<Monkey> monkeyList = new();
     HttpClient httpClient;
 
     public MonkeyService()
@@ -12,21 +11,14 @@ public class MonkeyService
         this.httpClient = new();
     }
 
-    public async Task<List<Monkey>> GetMonkeys()
+    public async Task<List<Monkey>> GetMonkeys(CancellationToken cancellationToken)
     {
-        if (monkeyList.Count > 0)
-        {
-            await Task.Delay(1000);
-            return monkeyList;
-        }
+        var response = await httpClient.GetAsync("https://www.montemagno.com/monkeys.json", cancellationToken)
+            .ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext);
 
-        var response = await httpClient.GetAsync("https://www.montemagno.com/monkeys.json");
+        response.EnsureSuccessStatusCode();
 
-        if(response.IsSuccessStatusCode)
-        {
-            return await response.Content.ReadFromJsonAsync<List<Monkey>>();
-        }
-
-        return monkeyList;
+        return await response.Content.ReadFromJsonAsync<List<Monkey>>(cancellationToken)
+            .ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext);
     }
 }

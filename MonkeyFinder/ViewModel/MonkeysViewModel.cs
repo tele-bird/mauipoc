@@ -1,6 +1,7 @@
 ﻿using MonkeyFinder.Services;
 using CommunityToolkit.Mvvm.Input;
 using MonkeyFinder.View;
+using AsyncAwaitBestPractices;
 
 namespace MonkeyFinder.ViewModel;
 
@@ -31,24 +32,41 @@ public partial class MonkeysViewModel : BaseViewModel
         GridItemsLayoutSpan = this.userPreferences.GridItemsLayoutSpan;
     }
 
-    [RelayCommand]
-    async Task RefreshMonkeys()
+    protected override async Task OnAppearing()
     {
-        if (IsBusy) return;
+        IsBusy = true;
+        await base.OnAppearing().ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext);
+        RefreshMonkeys(CancellationToken.None).SafeFireAndForget(HandleFireAndForgetException);
+    }
+
+    [RelayCommand]
+    async Task RefreshMonkeys(CancellationToken cancellationToken)
+    {
+
+        // enforce a minimum duration so that the user can tell that the refresh actually happened,
+        // even in the case where code execution is extremely fast
+        Task minimumRefreshTimeTask = Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
+
+        List<Monkey> monkeys = null;
+
         try
         {
-            IsBusy = true;
-            var monkeys = await monkeyService.GetMonkeys();
-            if (Monkeys.Count != 0) Monkeys.Clear();
-            foreach (var monkey in monkeys) Monkeys.Add(monkey);
-        }
-        catch(Exception exc)
-        {
-            Debug.WriteLine($"Unable to get monkeys: {exc.Message}");
-            await Application.Current.MainPage.DisplayAlert("Error", exc.Message, "OK");
+            // use ContinueOnCapturedContext (a .NET 8 addition which is the same as passing false)
+            // to return execution of the remainder of this method to the calling thread after Task
+            // completion - this will ensure that the modification of the UI-bound properties
+            // (Monkeys, IsBusy, and IsRefreshing) will update properly
+            monkeys = await monkeyService.GetMonkeys(cancellationToken)
+                .ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext);
         }
         finally
         {
+            await minimumRefreshTimeTask.ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext);
+            if (monkeys != null)
+            {
+                // update UI with results
+                Monkeys.Clear();
+                foreach (var monkey in monkeys) Monkeys.Add(monkey);
+            }
             IsBusy = false;
             IsRefreshing = false;
         }
@@ -65,21 +83,28 @@ public partial class MonkeysViewModel : BaseViewModel
             {
                 DesiredAccuracy = GeolocationAccuracy.Medium,
                 Timeout = TimeSpan.FromSeconds(30)
-            });
+            }).ConfigureAwait(ConfigureAwaitOptions.ContinueOnCapturedContext);
 
             // Find closest monkey to us
             var closestMonkey = Monkeys.OrderBy(m => location.CalculateDistance(new Location(m.Latitude, m.Longitude), DistanceUnits.Miles)).FirstOrDefault();
 
-            // show results:
-            var navigateToMonkey = await Shell.Current.DisplayAlert("Found!", $"{closestMonkey.Name} in {closestMonkey.Location}", "View Monkey", "Cancel");
-
-            // navigate to monkey if desired
-            if (navigateToMonkey)
+            if(closestMonkey == null)
             {
-                await Shell.Current.GoToAsync(nameof(DetailsPage), true, new Dictionary<string, object>
+                await Shell.Current.DisplayAlert(string.Empty, "No Monkeys found.", "OK");
+            }
+            else
+            {
+                // show results:
+                var navigateToMonkey = await Shell.Current.DisplayAlert("Found!", $"{closestMonkey.Name} in {closestMonkey.Location}", "View Monkey", "Cancel");
+
+                // navigate to monkey if desired
+                if (navigateToMonkey)
+                {
+                    await Shell.Current.GoToAsync(nameof(DetailsPage), true, new Dictionary<string, object>
                 {
                     { "Monkey", closestMonkey }
                 });
+                }
             }
         }
         catch (Exception ex)
