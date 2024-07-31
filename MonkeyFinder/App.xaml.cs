@@ -1,11 +1,13 @@
-﻿namespace MonkeyFinder;
+﻿using MonkeyFinder.View;
+
+namespace MonkeyFinder;
 
 public partial class App : Application
 {
-	public App()
+	public App(AppShell appShell)
 	{
 		InitializeComponent();
 
-		MainPage = new AppShell();
+		MainPage = appShell;
 	}
 }

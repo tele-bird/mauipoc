@@ -28,10 +28,12 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IUserPreferences, UserPreferences>();
 
         // views
+        builder.Services.AddTransient<AppShell>();
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<DetailsPage>();
 
 		// view models
+		builder.Services.AddTransient<AppShellViewModel>();
         builder.Services.AddTransient<MonkeysViewModel>();
         builder.Services.AddTransient<MonkeyDetailsViewModel>();
 
